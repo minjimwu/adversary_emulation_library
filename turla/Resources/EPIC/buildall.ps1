@@ -234,11 +234,12 @@ if ($build.Contains("simpledropper")) {
 	# Build the SimpleDropper executable with MSBuild.exe
 	Write-Host "`nBuilding the SimpleDropper executable..."
 	
-	$output = MSBuild.exe ..\SimpleDropper\SimpleDropper.sln /t:'Clean;Build' /p:Configuration=Release /fl /flp:'LogFile=err.txt;errorsonly'
+	$output = MSBuild.exe .\SimpleDropper\SimpleDropper.sln /t:'Clean;Build' /p:Configuration=Release /fl /flp:'LogFile=err.txt;errorsonly'
 	errCheck
 
 	# Grab the path to the SimpleDropper exe
 	$regex = (Select-String -InputObject $output -Pattern '\bSimpleDropper\.vcxproj -> (.*?\.exe)')
+	
 	$exePath = $regex.Matches.Groups[1].Value
 	Write-Host "Success! Path to the SimpleDropper compiled exe: $exePath"
 	
